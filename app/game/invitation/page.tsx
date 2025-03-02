@@ -1,19 +1,16 @@
 "use client";
 
-import { Suspense } from "react";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { getUserByInvitationCode } from "../../api";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const InvitationScreen = () => {
+const InvitationScreen = async ({ searchParams }) => {
 	const router = useRouter();
-	const searchParams = useSearchParams();
+	const code = (await searchParams).code;
 	const [username, setUsername] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [invitingUser, setInvitingUser] = useState(null);
-
-	const code = searchParams.get("code");
 
 	useEffect(() => {
 		// Only run the effect if code exists
@@ -90,63 +87,61 @@ const InvitationScreen = () => {
 	}
 
 	return (
-		<Suspense>
-			<div className="card">
-				<h1>🌍 You've Been Challenged!</h1>
+		<div className="card">
+			<h1>🌍 You've Been Challenged!</h1>
 
-				{invitingUser && (
-					<div className="text-center" style={{ marginBottom: "20px" }}>
-						<p>
-							<strong>{invitingUser.username}</strong> has challenged you to beat their score in Globetrotter!
-						</p>
+			{invitingUser && (
+				<div className="text-center" style={{ marginBottom: "20px" }}>
+					<p>
+						<strong>{invitingUser.username}</strong> has challenged you to beat their score in Globetrotter!
+					</p>
 
-						<div className="score-container">
-							<div className="score-item">
-								<div className="score-value">{invitingUser.score.correct}</div>
-								<div className="score-label">Correct</div>
+					<div className="score-container">
+						<div className="score-item">
+							<div className="score-value">{invitingUser.score.correct}</div>
+							<div className="score-label">Correct</div>
+						</div>
+						<div className="score-item">
+							<div className="score-value">{invitingUser.score.incorrect}</div>
+							<div className="score-label">Incorrect</div>
+						</div>
+						<div className="score-item">
+							<div className="score-value">
+								{invitingUser.score.correct + invitingUser.score.incorrect > 0
+									? Math.round(
+											(invitingUser.score.correct / (invitingUser.score.correct + invitingUser.score.incorrect)) * 100
+									  )
+									: 0}
+								%
 							</div>
-							<div className="score-item">
-								<div className="score-value">{invitingUser.score.incorrect}</div>
-								<div className="score-label">Incorrect</div>
-							</div>
-							<div className="score-item">
-								<div className="score-value">
-									{invitingUser.score.correct + invitingUser.score.incorrect > 0
-										? Math.round(
-												(invitingUser.score.correct / (invitingUser.score.correct + invitingUser.score.incorrect)) * 100
-										  )
-										: 0}
-									%
-								</div>
-								<div className="score-label">Accuracy</div>
-							</div>
+							<div className="score-label">Accuracy</div>
 						</div>
 					</div>
-				)}
-
-				<h3>Join the challenge!</h3>
-
-				<form onSubmit={handleJoinWithUsername}>
-					<input
-						type="text"
-						placeholder="Create your username"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-						disabled={isLoading}
-						required
-					/>
-					<button className="btn btn-primary" style={{ width: "100%" }} disabled={isLoading}>
-						{isLoading ? "Loading..." : "Join Challenge"}
-					</button>
-				</form>
-
-				<div className="text-center" style={{ marginTop: "20px" }}>
-					<button className="btn btn-secondary" onClick={handleContinueAsGuest}>
-						Continue as Guest
-					</button>
 				</div>
+			)}
+
+			<h3>Join the challenge!</h3>
+
+			<form onSubmit={handleJoinWithUsername}>
+				<input
+					type="text"
+					placeholder="Create your username"
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
+					disabled={isLoading}
+					required
+				/>
+				<button className="btn btn-primary" style={{ width: "100%" }} disabled={isLoading}>
+					{isLoading ? "Loading..." : "Join Challenge"}
+				</button>
+			</form>
+
+			<div className="text-center" style={{ marginTop: "20px" }}>
+				<button className="btn btn-secondary" onClick={handleContinueAsGuest}>
+					Continue as Guest
+				</button>
 			</div>
-		</Suspense>
+		</div>
 	);
 };
 
