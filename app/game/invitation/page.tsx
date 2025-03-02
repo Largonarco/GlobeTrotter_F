@@ -1,16 +1,19 @@
 "use client";
 
 import { toast } from "react-toastify";
-import { useState, useEffect } from "react";
 import { getUserByInvitationCode } from "../../api";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const InvitationScreen = async ({ searchParams }) => {
+const Invitation = () => {
 	const router = useRouter();
-	const code = (await searchParams).code;
+	const searchParams = useSearchParams();
 	const [username, setUsername] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [invitingUser, setInvitingUser] = useState(null);
+
+	// Get a specific param
+	const code = searchParams.get("code");
 
 	useEffect(() => {
 		// Only run the effect if code exists
@@ -142,6 +145,14 @@ const InvitationScreen = async ({ searchParams }) => {
 				</button>
 			</div>
 		</div>
+	);
+};
+
+const InvitationScreen = () => {
+	return (
+		<Suspense fallback={<div>Loading invitation...</div>}>
+			<Invitation />
+		</Suspense>
 	);
 };
 
