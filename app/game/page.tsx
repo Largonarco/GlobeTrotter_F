@@ -18,8 +18,8 @@ const Game = () => {
 	const [showConfetti, setShowConfetti] = useState(false);
 	const [showShareModal, setShowShareModal] = useState(false);
 	const [windowDimensions, setWindowDimensions] = useState({
-		width: window?.innerWidth,
-		height: window?.innerHeight,
+		width: null,
+		height: null,
 	});
 
 	// Get window dimensions for confetti
