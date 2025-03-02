@@ -11,11 +11,12 @@ import ShareModal from "../components/ShareModal";
 const Game = () => {
 	const router = useRouter();
 	const [user, setUser] = useState(null);
-	const [destination, setDestination] = useState(null);
-	const [selectedOption, setSelectedOption] = useState(null);
+
 	const [feedback, setFeedback] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [destination, setDestination] = useState(null);
 	const [showConfetti, setShowConfetti] = useState(false);
+	const [selectedOption, setSelectedOption] = useState(null);
 	const [showShareModal, setShowShareModal] = useState(false);
 	const [windowDimensions, setWindowDimensions] = useState({
 		width: null,
@@ -46,6 +47,7 @@ const Game = () => {
 		}
 
 		setUser(JSON.parse(storedUser));
+		loadDestination();
 	}, []);
 
 	// Load a random destination
@@ -64,13 +66,6 @@ const Game = () => {
 			setIsLoading(false);
 		}
 	}, []);
-
-	// Load initial destination
-	useEffect(() => {
-		if (user) {
-			loadDestination();
-		}
-	}, [user, loadDestination]);
 
 	// Handle option selection
 	const handleSelectOption = async (option) => {
@@ -201,11 +196,13 @@ const Game = () => {
 						<div className={`feedback-container ${feedback.isCorrect ? "correct" : "incorrect"}`}>
 							<div className="emoji-animation">{feedback.isCorrect ? "🎉" : "😢"}</div>
 							<h3>{feedback.isCorrect ? "Correct!" : "Incorrect!"}</h3>
+
 							<p>
 								{feedback.isCorrect
 									? `You got it right! ${feedback.correctAnswer} is the answer.`
 									: `The correct answer is ${feedback.correctAnswer}.`}
 							</p>
+
 							<p style={{ marginTop: "15px" }}>
 								<strong>Fun Fact:</strong> {feedback.feedback}
 							</p>
