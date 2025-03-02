@@ -7,7 +7,7 @@ import { useRef, useEffect, useState } from "react";
 const ShareModal = ({ user, onClose }) => {
 	const inviteCardRef = useRef(null);
 
-	const inviteUrl = `${window.location.origin}/invitation/${user.invitationCode}`;
+	const inviteUrl = `${window.location.origin}/game/invitation?code=${user.invitationCode}`;
 
 	const shareOnWhatsApp = () => {
 		const message = `I challenge you to beat my score on Globetrotter! Join me at: ${inviteUrl}`;
